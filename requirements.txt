@@ -8,3 +8,4 @@ seaborn
 xgboost
 geopy
 streamlit
+altair
