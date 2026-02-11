@@ -124,37 +124,13 @@ else:
     # MAP VIEW
     # ========================================================================
     with tab1:
-        map_data = filtered_df.copy()
+        # Use Streamlit's native map (no Mapbox token required)
+        map_data = filtered_df[['latitude', 'longitude']].copy()
+        map_data.columns = ['lat', 'lon']
         
-        color_map = {
-            'Sangat Cocok': [0, 255, 0, 200],
-            'Cocok': [0, 0, 255, 200],
-            'Tidak Cocok': [255, 0, 0, 200]
-        }
-        map_data['color'] = map_data['Verdict'].map(color_map)
+        st.map(map_data, zoom=7, use_container_width=True)
         
-        layer = pdk.Layer(
-            'ScatterplotLayer',
-            data=map_data,
-            get_position=['longitude', 'latitude'],
-            get_color='color',
-            get_radius=600,
-            pickable=True,
-        )
-        
-        view_state = pdk.ViewState(
-            latitude=map_data['latitude'].mean(),
-            longitude=map_data['longitude'].mean(),
-            zoom=7,
-            pitch=0,
-        )
-        
-        st.pydeck_chart(pdk.Deck(
-            layers=[layer],
-            initial_view_state=view_state,
-            tooltip={'html': '<b>{branch_id}</b><br>City: {city}<br>Score: {AI_Score:.1f}<br>Verdict: {Verdict}'},
-            map_style='mapbox://styles/mapbox/light-v10'
-        ))
+        st.info(f"📍 Showing {len(filtered_df)} locations across Malaysia")
     
     # ========================================================================
     # TABLE VIEW
