@@ -198,7 +198,13 @@ else:
         
         with col1:
             st.subheader("Score Distribution")
-            st.histogram(filtered_df['AI_Score'], bins=30)
+            hist_data = pd.cut(filtered_df['AI_Score'], bins=10)
+            hist_counts = hist_data.value_counts().sort_index()
+            hist_df = pd.DataFrame({
+                'Range': range(len(hist_counts)),
+                'Count': hist_counts.values
+            })
+            st.bar_chart(hist_df.set_index('Range'))
         
         with col2:
             st.subheader("Income vs Score")
